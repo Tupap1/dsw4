@@ -17,7 +17,7 @@ public class Articulo {
     private final String descripcion;
     private final EstadoArticulo estado;
     private final Precio precioInicial;
-    private final Instant fechaLimite;
+    private Instant fechaLimite;
     private final Categoria categoria;
     
     private EstadoSubasta estadoSubasta;
