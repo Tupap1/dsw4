@@ -120,8 +120,11 @@ public class MySQLArticuloRepositoryAdapter implements ArticuloRepositoryPort {
         Usuario vendedor = findUsuarioById(vendedorId, conn);
         Categoria categoria = findCategoriaById(categoriaId, conn);
 
-        // Instanciación usando el constructor normal de Articulo (que inicia con estado_subasta = ACTIVA)
-        Articulo articulo = new Articulo(id, vendedor, nombre, descripcion, estado, precioInicial, fechaLimite, categoria);
+        // Para pasar la validación de fecha límite en el futuro del constructor de Dominio al reconstruir desde BD,
+        // creamos el artículo temporalmente con una fecha futura y luego restauramos la real mediante reflexión.
+        Instant tempFecha = Instant.now().plus(1, java.time.temporal.ChronoUnit.DAYS);
+        Articulo articulo = new Articulo(id, vendedor, nombre, descripcion, estado, precioInicial, tempFecha, categoria);
+        setPrivateField(articulo, "fechaLimite", fechaLimite);
 
         // Restaurar estado de subasta usando reflexión
         String estadoSubastaStr = rs.getString("estado_subasta");
