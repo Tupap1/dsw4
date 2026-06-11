@@ -56,7 +56,9 @@ public class DependencyContainer {
                 sql = reader.lines().collect(Collectors.joining("\n"));
             }
 
-            try (Connection conn = connectionFactory.getConnection();
+            String initUrl = "jdbc:mysql://localhost:3306/?allowMultiQueries=true";
+            MySQLConnectionFactory initFactory = new MySQLConnectionFactory(initUrl, "root", "");
+            try (Connection conn = initFactory.getConnection();
                  Statement stmt = conn.createStatement()) {
                 // Ejecuta todo el script (gracias a allowMultiQueries=true en la url)
                 stmt.execute(sql);
